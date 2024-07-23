@@ -109,6 +109,10 @@ def dispatch_gptq(
 
     if AutoGPTQQuantLinear is not None and isinstance(target_base_layer, AutoGPTQQuantLinear):
         new_module = QuantLinear(target, adapter_name, **kwargs)
-        target.qweight = target_base_layer.qweight
+        if not hasattr(target, "qweight") and target.QUANT_TYPE == 'marlin':
+            target.qweight = target_base_layer.B
+            target.scales = target_base_layer.s
+        else:
+            target.qweight = target_base_layer.qweight
 
     return new_module

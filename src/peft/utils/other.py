@@ -516,6 +516,9 @@ def get_auto_gptq_quant_linear(gptq_quantization_config):
         desc_act = gptq_quantization_config.desc_act
         group_size = gptq_quantization_config.group_size
         bits = gptq_quantization_config.bits
+        use_marlin = False
+        if hasattr(gptq_quantization_config, "use_marlin"):
+            use_marlin = gptq_quantization_config.use_marlin
         if hasattr(gptq_quantization_config, "use_exllama"):
             use_exllama = gptq_quantization_config.use_exllama
         else:
@@ -531,6 +534,7 @@ def get_auto_gptq_quant_linear(gptq_quantization_config):
             bits=bits,
             disable_exllama=not (use_exllama and exllama_version == 1),
             disable_exllamav2=not (use_exllama and exllama_version == 2),
+            use_marlin=use_marlin,
         )
         return AutoGPTQQuantLinear
     return None
